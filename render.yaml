@@ -3,7 +3,7 @@ services:
     name: ung-dung-ve-hinh-toan
     env: node
     plan: free
-    region: singapore
+    region: oregon
     buildCommand: npm install && npm run build && curl -fsSL https://github.com/typst/typst/releases/download/v0.12.0/typst-x86_64-unknown-linux-musl.tar.xz -o typst.tar.xz && tar -xJf typst.tar.xz && mv typst-x86_64-unknown-linux-musl/typst typst-linux && chmod +x typst-linux && rm -rf typst.tar.xz typst-x86_64-unknown-linux-musl && echo "=== typst OK ===" && ./typst-linux --version
     startCommand: npm start
     envVars:
