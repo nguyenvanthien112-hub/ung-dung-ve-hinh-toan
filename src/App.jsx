@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import './App.css'
 
 import { SHAPE_CATEGORIES, getShapeById } from './data/shapeCategories.js'
@@ -100,6 +100,11 @@ function App() {
   const [formValues, setFormValues] = useState({})
   const [generatedCode, setGeneratedCode] = useState('')
 
+  // ShapeSelector accordion state — persisted across tab switches
+  const [activeCategoryId, setActiveCategoryId] = useState(null)
+  const [activeSubcategoryId, setActiveSubcategoryId] = useState(null)
+
+
   // Code editor mode state (old)
   const [mode, setMode] = useState('auto')
   const [equation, setEquation] = useState('x*x - 2*x + 1')
@@ -131,12 +136,26 @@ function App() {
   const [showDonate, setShowDonate] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [showVideo, setShowVideo] = useState(false)
+  const [showMoreMenu, setShowMoreMenu] = useState(false)
   const [toast, setToast] = useState('')
   const [svgZoom, setSvgZoom] = useState(1)
   const [history, setHistory] = useState(() => {
     const saved = localStorage.getItem(HISTORY_KEY)
     return saved ? JSON.parse(saved) : []
   })
+  const moreMenuRef = useRef(null)
+
+  // Close more menu on outside click
+  useEffect(() => {
+    if (!showMoreMenu) return
+    const handler = (e) => {
+      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target)) {
+        setShowMoreMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [showMoreMenu])
 
   // Update form values when shape changes
   useEffect(() => {
@@ -220,14 +239,32 @@ function App() {
       const apiUrl = import.meta.env.PROD
         ? '/api/compile'
         : 'http://localhost:3001/api/compile'
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: code })
-      })
+
+      let response
+      try {
+        response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code })
+        })
+      } catch (networkErr) {
+        // Lỗi kết nối mạng (server chưa chạy, port bị chặn, v.v.)
+        const isLocal = !import.meta.env.PROD
+        throw new Error(
+          isLocal
+            ? '🔌 Không kết nối được server biên dịch (localhost:3001).\n' +
+              'Hãy mở terminal mới và chạy: npm run server'
+            : '🔌 Không kết nối được server. Vui lòng thử lại sau.'
+        )
+      }
 
       if (!response.ok) {
-        const errorData = await response.json()
+        let errorData
+        try {
+          errorData = await response.json()
+        } catch (_) {
+          throw new Error(`Lỗi server: HTTP ${response.status}`)
+        }
         throw new Error(parseTypstError(errorData.details) || 'Không thể tạo hình vẽ.')
       }
 
@@ -239,7 +276,7 @@ function App() {
       }
     } catch (err) {
       console.error('Lỗi:', err)
-      setError(err.message || 'Chưa kết nối được với máy chủ cục bộ (port 3001).')
+      setError(err.message || 'Đã xảy ra lỗi không xác định.')
     } finally {
       setIsLoading(false)
     }
@@ -334,6 +371,43 @@ function App() {
   const zoomOut = () => setSvgZoom(z => Math.max(z - 0.25, 0.25))
   const zoomReset = () => setSvgZoom(1)
 
+  // Ctrl+Scroll de zoom SVG
+  const handleSvgWheel = useCallback((e) => {
+    if (!e.ctrlKey) return
+    e.preventDefault()
+    setSvgZoom(z => {
+      const delta = e.deltaY > 0 ? -0.15 : 0.15
+      return Math.min(Math.max(z + delta, 0.25), 4)
+    })
+  }, [])
+
+  // Keyboard shortcuts: Ctrl+Enter compile, Escape dong modal
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.ctrlKey && e.key === 'Enter') {
+        e.preventDefault()
+        if (appMode === 'builder' && selectedShape) {
+          handleGenerateFromForm()
+        } else if (appMode === 'code') {
+          const code = mode === 'auto'
+            ? generateTypstCode(equation, minX, maxX, showGrid)
+            : manualCode
+          if (mode === 'auto') setTypstCode(code)
+          setError('')
+          handleCompile(code)
+        }
+      }
+      if (e.key === 'Escape') {
+        setShowDonate(false)
+        setShowHelp(false)
+        setShowVideo(false)
+        setShowMoreMenu(false)
+      }
+    }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [appMode, selectedShape, mode, equation, minX, maxX, showGrid, manualCode, handleGenerateFromForm, handleCompile])
+
   const examQuestionText = mode === 'auto'
     ? `Câu 1. Đường cong trong hình bên là đồ thị của hàm số nào dưới đây?\nA. y = ${equation}.\nB. y = -(${equation}).\nC. y = ${equation.replace('+', '-')}.\nD. y = 2*(${equation}).`
     : `Câu 1. Cho hình vẽ như hình bên. Khẳng định nào sau đây là đúng?\nA. Hình vẽ minh họa tính chất hình học sư phạm.\nB. Hình vẽ được tạo bởi thư viện CeTZ Typst.\nC. Đây là một câu hỏi trắc nghiệm hình học.\nD. Tất cả các phương án trên đều đúng.`
@@ -351,45 +425,63 @@ function App() {
             className={`mode-btn ${appMode === 'builder' ? 'active' : ''}`}
             onClick={() => setAppMode('builder')}
           >
-            🎨 Form Builder
+            🎨 <span className="mode-btn-text">Form Builder</span>
           </button>
           <button
             className={`mode-btn ${appMode === 'code' ? 'active' : ''}`}
             onClick={() => setAppMode('code')}
           >
-            💻 Code Editor
+            💻 <span className="mode-btn-text">Code Editor</span>
           </button>
           <button
             className={`mode-btn ${appMode === 'templates' ? 'active' : ''}`}
             onClick={() => setAppMode('templates')}
           >
-            📚 Templates
+            📚 <span className="mode-btn-text">Templates</span>
           </button>
         </nav>
         <div className="top-bar-right">
-          <button className="video-btn" onClick={() => setShowVideo(true)} title="Xem video hướng dẫn">
-            ▶ Video
-          </button>
-          <button className="help-btn" onClick={() => setShowHelp(true)} title="Hướng dẫn sử dụng">
-            📖 Hướng dẫn
-          </button>
-          <button className="coffee-btn" onClick={() => setShowDonate(true)} title="Mời cà phê">
-            ☕ Mời cà phê
-          </button>
+          {/* Gemini AI — luôn hiển thị */}
           <a
             href={GEMINI_GEM_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="gemini-btn"
           >
-            🤖 Gemini AI
+            🤖 <span className="topbar-label">Gemini AI</span>
           </a>
+
+          {/* Download buttons khi có SVG */}
           {svgImage && (
             <div className="top-actions">
               <button className="btn-icon" onClick={downloadSVG} title="Tải SVG">⬇ SVG</button>
               <button className="btn-icon" onClick={downloadPNG} title="Tải PNG">⬇ PNG</button>
             </div>
           )}
+
+          {/* More menu — gộp Video, Hướng dẫn, Mời cà phê */}
+          <div className="more-menu-wrapper" ref={moreMenuRef}>
+            <button
+              className={`more-menu-btn ${showMoreMenu ? 'active' : ''}`}
+              onClick={() => setShowMoreMenu(v => !v)}
+              title="Thêm"
+            >
+              ☰
+            </button>
+            {showMoreMenu && (
+              <div className="more-menu-dropdown">
+                <button className="more-menu-item" onClick={() => { setShowVideo(true); setShowMoreMenu(false) }}>
+                  ▶ Video hướng dẫn
+                </button>
+                <button className="more-menu-item" onClick={() => { setShowHelp(true); setShowMoreMenu(false) }}>
+                  📖 Hướng dẫn sử dụng
+                </button>
+                <button className="more-menu-item coffee" onClick={() => { setShowDonate(true); setShowMoreMenu(false) }}>
+                  ☕ Mời cà phê
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
@@ -405,6 +497,10 @@ function App() {
                 <ShapeSelector
                   onSelectShape={setSelectedShape}
                   selectedShapeId={selectedShape?.id}
+                  activeCategoryId={activeCategoryId}
+                  onCategoryChange={setActiveCategoryId}
+                  activeSubcategoryId={activeSubcategoryId}
+                  onSubcategoryChange={setActiveSubcategoryId}
                 />
               </div>
 
@@ -454,9 +550,25 @@ function App() {
                 <details className="section-card code-preview-section" open>
                   <summary><strong>📄 Mã Typst Tự Động Sinh</strong></summary>
                   <div className="code-block">
+                    <div className="code-block-header">
+                      <span className="readonly-badge">🔒 Chỉ đọc</span>
+                    </div>
                     <textarea value={generatedCode} readOnly rows={8} />
                   </div>
-                  <button className="secondary btn-sm" onClick={() => handleCopy(generatedCode)}>Sao chép mã</button>
+                  <div className="code-actions-row">
+                    <button className="secondary btn-sm" onClick={() => handleCopy(generatedCode)}>📋 Sao chép mã</button>
+                    <button
+                      className="secondary btn-sm open-in-editor-btn"
+                      onClick={() => {
+                        setManualCode(generatedCode)
+                        setMode('manual')
+                        setAppMode('code')
+                      }}
+                      title="Mở mã này trong Code Editor để chỉnh sửa thêm"
+                    >
+                      ✏️ Mở trong Code Editor
+                    </button>
+                  </div>
                 </details>
               )}
 
@@ -482,8 +594,9 @@ function App() {
                     <span className="zoom-label">{Math.round(svgZoom * 100)}%</span>
                     <button className="zoom-btn" onClick={zoomIn} title="Phóng to">🔍+</button>
                     <button className="zoom-btn" onClick={zoomReset} title="Về kích thước gốc">⊡</button>
+                    <span className="zoom-hint">Ctrl+Scroll</span>
                   </div>
-                  <div className="svg-container">
+                  <div className="svg-container" onWheel={handleSvgWheel}>
                     <div style={{ transform: `scale(${svgZoom})`, transformOrigin: 'top center', transition: 'transform 0.15s' }}
                       dangerouslySetInnerHTML={{ __html: svgImage }} />
                   </div>
@@ -535,6 +648,29 @@ function App() {
                       <label>y = f(x)</label>
                       <input value={equation} onChange={(e) => setEquation(e.target.value)} placeholder="x*x - 2*x + 1" />
                     </div>
+                    {/* Ví dụ nhanh */}
+                    <div className="expr-examples">
+                      <span className="expr-examples-label">Ví dụ nhanh:</span>
+                      {[
+                        { label: 'x²−2x+1', expr: 'x*x - 2*x + 1' },
+                        { label: 'x³−3x', expr: 'x*x*x - 3*x' },
+                        { label: 'sin(x)', expr: 'calc.sin(x)' },
+                        { label: 'cos(x)', expr: 'calc.cos(x)' },
+                        { label: '1/(x−1)', expr: '1/(x - 1)' },
+                        { label: 'eˣ', expr: 'calc.exp(x)' },
+                        { label: 'ln(x)', expr: 'calc.ln(x)' },
+                        { label: '√x', expr: 'calc.sqrt(x)' },
+                      ].map(({ label, expr }) => (
+                        <button
+                          key={expr}
+                          className="expr-chip"
+                          onClick={() => setEquation(expr)}
+                          title={expr}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
                     <div className="range-inputs">
                       <div>
                         <label>X min</label>
@@ -550,6 +686,7 @@ function App() {
                       Hiển thị lưới
                     </label>
                   </div>
+
                 ) : (
                   <div className="code-editor">
                     <label>Mã Typst / CeTZ:</label>
@@ -654,8 +791,9 @@ function App() {
                     <span className="zoom-label">{Math.round(svgZoom * 100)}%</span>
                     <button className="zoom-btn" onClick={zoomIn} title="Phóng to">🔍+</button>
                     <button className="zoom-btn" onClick={zoomReset} title="Về kích thước gốc">⊡</button>
+                    <span className="zoom-hint">Ctrl+Scroll</span>
                   </div>
-                  <div className="svg-container">
+                  <div className="svg-container" onWheel={handleSvgWheel}>
                     <div style={{ transform: `scale(${svgZoom})`, transformOrigin: 'top center', transition: 'transform 0.15s' }}
                       dangerouslySetInnerHTML={{ __html: svgImage }} />
                   </div>
@@ -775,13 +913,37 @@ function App() {
           <details className="history-bar" open={false}>
             <summary className="history-summary">
               <strong>📜 Lịch Sử</strong> ({history.length} hình đã vẽ)
+              <button
+                className="history-clear-btn"
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (confirm('Xóa toàn bộ lịch sử?')) {
+                    setHistory([])
+                    localStorage.removeItem(HISTORY_KEY)
+                  }
+                }}
+                title="Xóa toàn bộ lịch sử"
+              >
+                🗑 Xóa tất cả
+              </button>
             </summary>
             <div className="history-list">
               {history.map((item) => (
-                <div key={item.id} className="history-item" onClick={() => loadFromHistory(item)}>
-                  <span className="history-time">{item.time}</span>
-                  <span className="history-mode">{item.mode === 'builder' ? '🏗' : '💻'}</span>
-                  <span className="history-snippet">{item.code.substring(0, 80)}...</span>
+                <div key={item.id} className="history-item">
+                  <div className="history-item-main" onClick={() => loadFromHistory(item)}>
+                    <span className="history-time">{item.time}</span>
+                    <span className="history-mode">{item.mode === 'builder' ? '🏗 Form' : '💻 Code'}</span>
+                    <span className="history-snippet">{item.code.substring(0, 60)}…</span>
+                  </div>
+                  <button
+                    className="history-delete-btn"
+                    onClick={() => {
+                      const next = history.filter(h => h.id !== item.id)
+                      setHistory(next)
+                      localStorage.setItem(HISTORY_KEY, JSON.stringify(next))
+                    }}
+                    title="Xóa mục này"
+                  >×</button>
                 </div>
               ))}
             </div>

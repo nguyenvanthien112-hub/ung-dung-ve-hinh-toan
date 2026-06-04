@@ -1,17 +1,21 @@
-import { useState } from 'react';
-import { SHAPE_CATEGORIES, getShapesByCategory, getShapesBySubcategory } from '../data/shapeCategories.js';
+import { SHAPE_CATEGORIES, getShapesBySubcategory } from '../data/shapeCategories.js';
 
-function ShapeSelector({ onSelectShape, selectedShapeId }) {
-  const [activeCategory, setActiveCategory] = useState(null);
-  const [activeSubcategory, setActiveSubcategory] = useState(null);
-
+function ShapeSelector({
+  onSelectShape,
+  selectedShapeId,
+  activeCategoryId,
+  onCategoryChange,
+  activeSubcategoryId,
+  onSubcategoryChange
+}) {
   const handleCategoryClick = (categoryId) => {
-    setActiveCategory(activeCategory === categoryId ? null : categoryId);
-    setActiveSubcategory(null);
+    const next = activeCategoryId === categoryId ? null : categoryId;
+    onCategoryChange(next);
+    onSubcategoryChange(null);
   };
 
   const handleSubcategoryClick = (subcategoryId) => {
-    setActiveSubcategory(activeSubcategory === subcategoryId ? null : subcategoryId);
+    onSubcategoryChange(activeSubcategoryId === subcategoryId ? null : subcategoryId);
   };
 
   const handleShapeClick = (shape) => {
@@ -26,26 +30,26 @@ function ShapeSelector({ onSelectShape, selectedShapeId }) {
         {Object.values(SHAPE_CATEGORIES).map((category) => (
           <div key={category.id} className="category-group">
             <button
-              className={`category-btn ${activeCategory === category.id ? 'active' : ''}`}
+              className={`category-btn ${activeCategoryId === category.id ? 'active' : ''}`}
               onClick={() => handleCategoryClick(category.id)}
             >
               {category.icon} {category.name}
             </button>
 
-            {activeCategory === category.id && (
+            {activeCategoryId === category.id && (
               <div className="subcategories">
                 {Object.values(category.subcategories).map((subcategory) => {
                   const shapes = getShapesBySubcategory(category.id, subcategory.id);
                   return (
                     <div key={subcategory.id} className="subcategory-group">
                       <button
-                        className={`subcategory-btn ${activeSubcategory === subcategory.id ? 'active' : ''}`}
+                        className={`subcategory-btn ${activeSubcategoryId === subcategory.id ? 'active' : ''}`}
                         onClick={() => handleSubcategoryClick(subcategory.id)}
                       >
                         {subcategory.name} ({shapes.length})
                       </button>
 
-                      {activeSubcategory === subcategory.id && (
+                      {activeSubcategoryId === subcategory.id && (
                         <div className="shapes-grid">
                           {shapes.map((shape) => (
                             <button
