@@ -697,6 +697,27 @@ function App() {
                       rows={12}
                       placeholder="Nhập mã Typst tại đây..."
                     />
+                    
+                    {/* Hướng dẫn tích hợp Gemini cho GV không biết code */}
+                    <div className="ai-guide-card">
+                      <div className="ai-guide-header">
+                        <span>💡 Hướng dẫn dành cho Giáo viên (Không cần biết code)</span>
+                      </div>
+                      <div className="ai-guide-body">
+                        <p>Bạn có thể nhờ <strong>Gemini AI</strong> vẽ hoặc sửa đổi hình vẽ bằng tiếng Việt:</p>
+                        <ul>
+                          <li>
+                            <strong>Tạo hình mới:</strong> Bấm nút <a href={GEMINI_GEM_URL} target="_blank" rel="noopener noreferrer" className="inline-gemini-link">🤖 Gemini AI</a> ở thanh trên cùng. Chat tiếng Việt yêu cầu vẽ: <em>"Vẽ cho tôi tam giác ABC vuông tại A, đường cao AH."</em>
+                          </li>
+                          <li>
+                            <strong>Sửa đổi hình hiện tại:</strong> Copy toàn bộ đoạn mã trong ô soạn thảo ở trên ➔ dán vào ô chat Gemini và nói: <em>"Đổi giúp tôi nét vẽ của tam giác này thành nét đứt và viết chữ A to lên."</em>
+                          </li>
+                          <li>
+                            <strong>Cách vẽ:</strong> Copy đoạn mã kết quả (trong ô màu đen) từ Gemini ➔ Dán đè vào ô soạn thảo ở trên ➔ Bấm nút <strong>Tạo Hình Vẽ</strong>.
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>

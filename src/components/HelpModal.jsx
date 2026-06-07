@@ -44,15 +44,15 @@ const SECTIONS = [
   {
     id: 'codeeditor',
     icon: '💻',
-    title: 'Code Editor — Tự viết hoặc dán mã Typst',
+    title: 'Code Editor — Tự viết hoặc dùng Gemini AI',
     steps: [
       { step: '1', text: 'Chọn chế độ <strong>💻 Code Editor</strong> trên thanh điều hướng.' },
-      { step: '2', text: '<strong>Auto (Đồ thị)</strong>: nhập hàm số y = f(x), khoảng x, bấm Tạo Hình Vẽ.' },
-      { step: '3', text: '<strong>Manual (Tự do)</strong>: dán mã Typst/CeTZ từ AI vào ô soạn thảo, bấm Tạo Hình Vẽ.' },
-      { step: '4', text: 'Dùng <strong>📋 Mẫu Có Sẵn</strong> để chọn nhanh các hình mẫu phổ biến.' },
-      { step: '5', text: 'Dùng <strong>🤖 Gợi Ý Prompt AI</strong> để sao chép câu lệnh mẫu gửi lên Gemini.' },
+      { step: '2', text: '<strong>Tự động (Đồ thị)</strong>: Nhập hàm số y = f(x) và khoảng giá trị X để vẽ đồ thị hàm số.' },
+      { step: '3', text: '<strong>Tự do (Manual)</strong>: Dán mã Typst/CeTZ hoặc trò chuyện bằng tiếng Việt với Gemini AI để vẽ hình.' },
+      { step: '4', text: '<strong>Cách vẽ/sửa bằng AI:</strong> Mở nút <strong>🤖 Gemini AI</strong> ➔ Chat yêu cầu hoặc dán code cũ nhờ sửa ➔ Copy kết quả từ Gemini dán vào ô soạn thảo ➔ Bấm <strong>Tạo Hình Vẽ</strong>.' },
+      { step: '5', text: 'Dùng <strong>📋 Mẫu Có Sẵn</strong> và <strong>🤖 Gợi Ý Prompt AI</strong> để thao tác nhanh hơn.' },
     ],
-    tip: 'Sau khi vẽ thành công ở chế độ Manual, phần "Mẫu câu hỏi trắc nghiệm" tự tạo sẵn văn bản đề bài để copy.',
+    tip: 'Bạn có thể copy mã của hình vẽ bất kỳ sang ô chat Gemini để nhờ AI căn chỉnh vị trí các điểm hoặc thêm bớt các đường nét.',
   },
   {
     id: 'promptbuilder',
