@@ -51,6 +51,7 @@ export function generateLighthouseElevation(params = {}) {
   const rightBound = Math.max(11.5, scaledXH + 2.5);
 
   let code = `#import "@preview/cetz:0.3.2": canvas, draw
+#set page(width: auto, height: auto, margin: 10pt)
 
 #canvas({
   import draw: *
@@ -193,6 +194,7 @@ export function generateTreeShadow(params = {}) {
   const yC = h;
 
   let code = `#import "@preview/cetz:0.3.2": canvas, draw
+#set page(width: auto, height: auto, margin: 10pt)
 
 #canvas({
   import draw: *
@@ -270,6 +272,7 @@ export function generateTwoShipsDistance(params = {}) {
   const xA = 9.0;
 
   let code = `#import "@preview/cetz:0.3.2": canvas, draw
+#set page(width: auto, height: auto, margin: 10pt)
 
 #canvas({
   import draw: *
