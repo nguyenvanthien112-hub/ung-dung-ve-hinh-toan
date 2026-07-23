@@ -264,6 +264,9 @@ export function generateTwoShipsDistance(params = {}) {
     labelDist = 'd = ?'
   } = params;
 
+  const xB = 4.0;
+  const xA = 6.2;
+
   let code = `#import "@preview/cetz:0.3.2": canvas, draw
 
 #canvas({
@@ -285,10 +288,6 @@ export function generateTwoShipsDistance(params = {}) {
 
   // Đường nằm ngang từ C (phương nằm ngang để tính góc hạ)
   line((0.5, 4.0), (5.5, 4.0), stroke: (dash: "dashed", paint: gray, thickness: 1pt))
-
-  // Hai con tàu A và B trên biển
-  const xB = 4.0;
-  const xA = 6.2;
 
   // Tia nhìn từ C tới Tàu B và Tàu A
   line((0.5, 4.0), (${xB}, 0), stroke: 1.5pt + rgb("#2563eb"))
