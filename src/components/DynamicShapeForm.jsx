@@ -56,11 +56,15 @@ function DynamicShapeForm({ shapeId, formValues, onValueChange, onGenerate }) {
                 value={formValues[field.name] || field.default}
                 onChange={(e) => onValueChange(field.name, e.target.value)}
               >
-                {field.options.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
+                {field.options.map((option) => {
+                  const val = typeof option === 'object' && option !== null ? option.value : option;
+                  const lbl = typeof option === 'object' && option !== null ? option.label : option;
+                  return (
+                    <option key={val} value={val}>
+                      {lbl}
+                    </option>
+                  );
+                })}
               </select>
             )}
 
