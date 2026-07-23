@@ -1225,7 +1225,68 @@ TEMPLATE_LIBRARY['variation-table'] = {
   content((TW-BW-0.1, hi), [$+infinity$], anchor: "east")
 })`
     }
-  ]
+  ],
+
+  // ==================== BÀI TOÁN THỰC TẾ ====================
+  'real-world': {
+    'trig-applications': [
+      {
+        id: 'realworld-lighthouse-elevation',
+        name: 'Bài toán Ngọn hải đăng (AB=30m, 45° và 75°)',
+        category: 'trig-applications',
+        code: `#import "@preview/cetz:0.3.2": canvas, draw
+
+#canvas({
+  import draw: *
+
+  // Bối cảnh: Bờ biển & Bầu trời
+  rect((-1, -1.2), (7.7, 0), fill: rgb("#eab308").lighten(70%), stroke: none)
+  rect((-1, 0), (7.7, 5.7), fill: rgb("#e0f2fe"), stroke: none)
+  line((-1, 0), (7.7, 0), stroke: 1.5pt + black)
+
+  // Ngọn Hải Đăng (Lighthouse)
+  polygon((4.8, 0), (5.6, 0), (5.45, 3.6), (4.95, 3.6), fill: rgb("#ffffff"), stroke: 1pt + black)
+  polygon((4.8, 0), (5.6, 0), (5.53, 0.9), (4.87, 0.9), fill: rgb("#dc2626"), stroke: 0.5pt + black)
+  polygon((4.92, 1.8), (5.48, 1.8), (5.41, 2.7), (4.99, 2.7), fill: rgb("#dc2626"), stroke: 0.5pt + black)
+  rect((4.98, 3.6), (5.42, 4.2), fill: rgb("#fde047"), stroke: 1pt + black)
+  polygon((4.92, 4.2), (5.48, 4.2), (5.2, 4.7), fill: rgb("#dc2626"), stroke: 1pt + black)
+
+  // Đường cao h (nét đứt đỏ)
+  line((5.2, 0), (5.2, 4.2), stroke: (dash: "dashed", paint: rgb("#dc2626"), thickness: 1.5pt))
+  content((5.65, 2.1), text(fill: rgb("#dc2626"), weight: "bold", [$h = ?$]))
+
+  // Góc vuông tại H
+  line((4.95, 0), (4.95, 0.25), (5.2, 0.25), stroke: 1pt + black)
+
+  // Tia ngắm từ A và B tới đỉnh C
+  line((1, 0), (5.2, 4.2), stroke: 1.5pt + rgb("#1d4ed8"))
+  line((4, 0), (5.2, 4.2), stroke: 1.5pt + rgb("#1d4ed8"))
+
+  // Cung chỉ góc
+  arc((1, 0), start: 0deg, stop: 45deg, radius: 0.85, stroke: 1pt + black)
+  content((2.25, 0.35), [$45^\\circ$])
+
+  arc((4, 0), start: 0deg, stop: 75deg, radius: 0.65, stroke: 1pt + black)
+  content((4.95, 0.35), [$75^\\circ$])
+
+  // Mũi tên khoảng cách AB = 30 m
+  line((1, -0.2), (4, -0.2), stroke: 1.2pt + rgb("#dc2626"), mark: (start: ">", end: ">"))
+  content((2.5, -0.45), text(fill: rgb("#dc2626"), weight: "bold", [$30\\text{ m}$]))
+
+  // Nhãn các điểm A, B, C, H
+  circle((1, 0), radius: 0.07, fill: black)
+  circle((4, 0), radius: 0.07, fill: black)
+  circle((5.2, 0), radius: 0.07, fill: black)
+  circle((5.2, 4.2), radius: 0.07, fill: black)
+
+  content((1, -0.45), [$A$])
+  content((4, -0.45), [$B$])
+  content((5.2, -0.45), [$H$])
+  content((5.2, 4.55), [$C$])
+})`
+      }
+    ]
+  }
 };
 
 // Helper function để lấy tất cả templates dưới dạng flat array

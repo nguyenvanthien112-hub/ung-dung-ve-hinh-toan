@@ -100,6 +100,12 @@ import {
   generateCircuitParallel
 } from './physics.js';
 
+import {
+  generateLighthouseElevation,
+  generateTreeShadow,
+  generateTwoShipsDistance
+} from './realWorldGeometry.js';
+
 import { generateInequalityRegion, generateCircleRegion, generateParabolaRegion, generateMixedRegion } from './inequalities.js';
 
 import {
@@ -294,7 +300,12 @@ const GENERATOR_MAP = {
   // Biểu đồ tần số
   'histogram': generateHistogram,
   'histogram-relative': generateHistogramRelative,
-  'line-chart-relative': generateLineChartRelative
+  'line-chart-relative': generateLineChartRelative,
+
+  // Bài toán thực tế
+  'lighthouse-elevation': generateLighthouseElevation,
+  'tree-shadow': generateTreeShadow,
+  'two-ships-distance': generateTwoShipsDistance
 };
 
 export function getGenerator(shapeId) {

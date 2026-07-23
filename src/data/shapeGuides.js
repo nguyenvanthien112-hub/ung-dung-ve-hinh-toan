@@ -563,6 +563,48 @@ export const SHAPE_GUIDES = {
       { label: 'Tia sáng qua thấu kính phân kỳ', values: 'f=3, d=5, h=2' },
     ],
   },
+
+  // ==================== BÀI TOÁN THỰC TẾ ====================
+
+  'lighthouse-elevation': {
+    description: 'Bài toán thực tế: Quan sát Ngọn hải đăng / Tòa nhà từ 2 vị trí A và B (góc nghiêng α, β). Tính chiều cao h.',
+    tips: [
+      'Góc α tại A và góc β tại B (thường β > α khi B gần chân hải đăng hơn)',
+      'Khoảng cách AB có thể nhập kèm đơn vị (ví dụ: "30 m", "50 m")',
+      'Tùy chọn loại vật thể: Ngọn hải đăng sọc đỏ-trắng, Tòa nhà cao tầng, Tháp truyền hình, Cột cờ',
+      'Tùy chọn bối cảnh: Bờ biển & Bầu trời, Mặt đất & Bầu trời, Đơn giản',
+      'Tùy chỉnh nhãn các điểm A, B, C, H và nhãn chiều cao h = ?'
+    ],
+    examples: [
+      { label: 'Ngọn hải đăng — AB=30m, α=45°, β=75°', values: 'Khoảng cách: 30 m | Góc A: 45° | Góc B: 75° | Vật thể: Ngọn hải đăng' },
+      { label: 'Tòa nhà cao tầng — AB=50m, α=30°, β=60°', values: 'Khoảng cách: 50 m | Góc A: 30° | Góc B: 60° | Vật thể: Tòa nhà' }
+    ]
+  },
+
+  'tree-shadow': {
+    description: 'Bài toán thực tế: Đo chiều cao cây xanh / cột cờ bằng chiều dài bóng râm và góc nâng mặt trời.',
+    tips: [
+      'Nhập chiều dài bóng râm AB (ví dụ: "12 m")',
+      'Góc mặt trời: góc tạo bởi tia nắng mặt trời và mặt đất (ví dụ: 60°)',
+      'Tùy chọn loại vật thể: Cây xanh có tán lá, Cột cờ',
+      'Có hiển thị mặt trời và tia nắng chiếu sáng'
+    ],
+    examples: [
+      { label: 'Chiều cao cây — Bóng 12m, góc 60°', values: 'Bóng râm: 12 m | Góc: 60° | Vật thể: Cây xanh' }
+    ]
+  },
+
+  'two-ships-distance': {
+    description: 'Bài toán thực tế: Từ đỉnh đài quan sát / ngọn hải đăng nhìn xuống 2 con tàu trên biển với góc hạ α, β. Tính khoảng cách giữa 2 tàu.',
+    tips: [
+      'Chiều cao đài quan sát (ví dụ: "50 m")',
+      'Góc hạ α (Tàu A xa hơn, góc nhỏ hơn) và góc hạ β (Tàu B gần hơn)',
+      'Biểu diễn bối cảnh mặt biển xanh, đường nằm ngang quan sát và 2 chiếc thuyền'
+    ],
+    examples: [
+      { label: 'Khoảng cách 2 tàu — Tháp 50m, góc 30° & 45°', values: 'Chiều cao: 50 m | Góc hạ A: 30° | Góc hạ B: 45°' }
+    ]
+  }
 };
 
 // Lấy guide cho 1 shape (trả về null nếu không có)

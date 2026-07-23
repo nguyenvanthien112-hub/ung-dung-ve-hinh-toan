@@ -82,6 +82,19 @@ const SECTIONS = [
     tip: 'Kết hợp mẫu + chỉnh sửa thủ công trong Code Editor để tạo hình phức tạp nhanh hơn.',
   },
   {
+    id: 'realworld',
+    icon: '🏞️',
+    title: 'Bài Toán Thực Tế — Hải đăng, tòa nhà, bóng cây, con tàu...',
+    steps: [
+      { step: '1', text: 'Vào <strong>🎨 Form Builder</strong> ➔ Chọn danh mục <strong>🏞️ Bài toán thực tế</strong>.' },
+      { step: '2', text: 'Chọn loại bài toán: <strong>Ngọn hải đăng / Tòa nhà</strong> (quan sát từ 2 điểm), <strong>Chiều cao cây</strong> (bóng râm), hoặc <strong>Hai con tàu trên biển</strong>.' },
+      { step: '3', text: 'Nhập khoảng cách AB (ví dụ 30m), các góc quan sát α, β và chọn bối cảnh cảnh vật (bờ biển, bầu trời, mặt đất).' },
+      { step: '4', text: 'Hình vẽ SVG bối cảnh thực tế tự động cập nhật lập tức với đầy đủ đối tượng, tia ngắm, góc nghiêng và mũi tên kích thước.' },
+      { step: '5', text: '<strong>Bài toán lạ/độc đáo:</strong> Dùng nút <strong>🤖 Gemini AI</strong> chat tiếng Việt (ví dụ: <em>"Vẽ cây cầu treo có dây cáp hình parabol..."</em>) để AI sinh mã vẽ hình tương ứng.' },
+    ],
+    tip: 'Tất cả các bài toán thực tế lượng giác, đại số (đồ thị parabol quả bóng nảy) và hình học không gian SGK mới đều được hỗ trợ.',
+  },
+  {
     id: 'export',
     icon: '⬇️',
     title: 'Tải về — SVG và PNG',

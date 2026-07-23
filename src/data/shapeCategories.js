@@ -344,6 +344,23 @@ export const SHAPE_CATEGORIES = {
         ]
       }
     }
+  },
+
+  'real-world': {
+    id: 'real-world',
+    name: 'Bài toán thực tế',
+    icon: '🏞️',
+    subcategories: {
+      'trig-applications': {
+        id: 'trig-applications',
+        name: 'Ứng dụng Lượng giác & Khoảng cách',
+        shapes: [
+          { id: 'lighthouse-elevation', name: 'Ngọn hải đăng / Tòa nhà (2 góc quan sát)', description: 'Quan sát ngọn hải đăng/tòa nhà từ 2 vị trí A và B (góc nghiêng α, β)' },
+          { id: 'tree-shadow', name: 'Chiều cao cây / Cột cờ (Bóng râm)', description: 'Bài toán bóng râm và góc nâng mặt trời' },
+          { id: 'two-ships-distance', name: 'Hai con tàu trên biển', description: 'Từ đỉnh đài quan sát nhìn xuống 2 con tàu' }
+        ]
+      }
+    }
   }
 };
 

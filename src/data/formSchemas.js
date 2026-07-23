@@ -1442,6 +1442,60 @@ export const FORM_SCHEMAS = {
       { name: 'showValues', label: 'Hiển thị % tại điểm',                               type: 'checkbox', default: true },
       { name: 'showGrid',   label: 'Hiển thị lưới ngang',                               type: 'checkbox', default: true }
     ]
+  },
+
+  // ==================== BÀI TOÁN THỰC TẾ ====================
+  'lighthouse-elevation': {
+    fields: [
+      { name: 'distanceAB', label: 'Khoảng cách AB', type: 'text', default: '30 m' },
+      { name: 'angleA', label: 'Góc tại điểm A (°)', type: 'number', min: 5, max: 85, default: 45, unit: '°' },
+      { name: 'angleB', label: 'Góc tại điểm B (°)', type: 'number', min: 5, max: 85, default: 75, unit: '°' },
+      { name: 'objectType', label: 'Vật thể cần tính chiều cao', type: 'select', default: 'lighthouse', options: [
+          { value: 'lighthouse', label: 'Ngọn hải đăng (Sọc đỏ - trắng)' },
+          { value: 'building', label: 'Tòa nhà cao tầng' },
+          { value: 'tower', label: 'Tháp truyền hình' },
+          { value: 'flagpole', label: 'Cột cờ' }
+        ]
+      },
+      { name: 'bgType', label: 'Bối cảnh cảnh vật', type: 'select', default: 'sea-sky', options: [
+          { value: 'sea-sky', label: 'Bờ biển & Bầu trời' },
+          { value: 'land-sky', label: 'Mặt đất & Bầu trời' },
+          { value: 'simple', label: 'Đơn giản (chỉ có đường đất)' }
+        ]
+      },
+      { name: 'labelA', label: 'Nhãn điểm A', type: 'text', default: 'A' },
+      { name: 'labelB', label: 'Nhãn điểm B', type: 'text', default: 'B' },
+      { name: 'labelC', label: 'Nhãn đỉnh C', type: 'text', default: 'C' },
+      { name: 'labelH', label: 'Nhãn chân H', type: 'text', default: 'H' },
+      { name: 'labelHeight', label: 'Nhãn chiều cao', type: 'text', default: 'h = ?' }
+    ]
+  },
+
+  'tree-shadow': {
+    fields: [
+      { name: 'shadowLength', label: 'Chiều dài bóng râm', type: 'text', default: '12 m' },
+      { name: 'angleSun', label: 'Góc mặt trời (°)', type: 'number', min: 10, max: 80, default: 60, unit: '°' },
+      { name: 'objectType', label: 'Loại cây / Vật thể', type: 'select', default: 'tree', options: [
+          { value: 'tree', label: 'Cây xanh' },
+          { value: 'flagpole', label: 'Cột cờ' }
+        ]
+      },
+      { name: 'labelA', label: 'Nhãn điểm A (bóng râm)', type: 'text', default: 'A' },
+      { name: 'labelB', label: 'Nhãn gốc B', type: 'text', default: 'B' },
+      { name: 'labelC', label: 'Nhãn ngọn C', type: 'text', default: 'C' },
+      { name: 'labelHeight', label: 'Nhãn chiều cao', type: 'text', default: 'h = ?' }
+    ]
+  },
+
+  'two-ships-distance': {
+    fields: [
+      { name: 'towerHeight', label: 'Chiều cao đài quan sát', type: 'text', default: '50 m' },
+      { name: 'angleDepressionA', label: 'Góc hạ tới Tàu A (°)', type: 'number', min: 5, max: 80, default: 30, unit: '°' },
+      { name: 'angleDepressionB', label: 'Góc hạ tới Tàu B (°)', type: 'number', min: 5, max: 80, default: 45, unit: '°' },
+      { name: 'labelA', label: 'Nhãn tàu A', type: 'text', default: 'Tàu A' },
+      { name: 'labelB', label: 'Nhãn tàu B', type: 'text', default: 'Tàu B' },
+      { name: 'labelDist', label: 'Nhãn khoảng cách', type: 'text', default: 'd = ?' }
+    ]
   }
 };
 
