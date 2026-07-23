@@ -598,7 +598,14 @@ function App() {
                   </div>
                   <div className="svg-container" onWheel={handleSvgWheel}>
                     <div style={{ transform: `scale(${svgZoom})`, transformOrigin: 'center center', transition: 'transform 0.15s', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto', width: '100%', height: '100%' }}
-                      dangerouslySetInnerHTML={{ __html: svgImage }} />
+                      dangerouslySetInnerHTML={{
+                        __html: svgImage ? svgImage.replace(/<svg\b([^>]*)>/, (m, head) => {
+                          let h = head.replace(/\bwidth="[^"]*"/g, 'width="100%"').replace(/\bheight="[^"]*"/g, 'height="100%"');
+                          if (!h.includes('width=')) h += ' width="100%"';
+                          if (!h.includes('height=')) h += ' height="100%"';
+                          return `<svg ${h}>`;
+                        }) : ''
+                      }} />
                   </div>
                 </div>
               ) : (

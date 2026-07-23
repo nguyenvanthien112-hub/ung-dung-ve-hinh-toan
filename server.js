@@ -123,8 +123,18 @@ app.post('/api/compile', (req, res) => {
 
     try {
       if (fs.existsSync(tempSvgPath)) {
-        const svgContent = fs.readFileSync(tempSvgPath, 'utf8');
+        let svgContent = fs.readFileSync(tempSvgPath, 'utf8');
         fs.unlinkSync(tempSvgPath);
+
+        // Chuẩn hóa SVG để tự động mở rộng 100% tràn khung hình
+        svgContent = svgContent.replace(/<svg\b([^>]*)>/, (match, head) => {
+          let newHead = head.replace(/\bwidth="[^"]*"/g, 'width="100%"');
+          newHead = newHead.replace(/\bheight="[^"]*"/g, 'height="100%"');
+          if (!newHead.includes('width=')) newHead += ' width="100%"';
+          if (!newHead.includes('height=')) newHead += ' height="100%"';
+          return `<svg ${newHead}>`;
+        });
+
         res.json({ svg: svgContent });
       } else {
         res.status(500).json({ error: 'SVG file was not generated' });
