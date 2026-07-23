@@ -122,7 +122,7 @@ export function generateLighthouseElevation(params = {}) {
   // 3. Đường nét đứt biểu diễn chiều cao h (chữ to 14pt)
   code += `  // Đường cao h (nét đứt đỏ)\n`;
   code += `  line((${scaledXH}, 0), (${xC}, ${yC}), stroke: (dash: "dashed", paint: rgb("${dimColor}"), thickness: 2pt))\n`;
-  code += `  content((${scaledXH + 0.65}, ${(yC / 2).toFixed(2)}), text(14pt, fill: rgb("${dimColor}"), weight: "bold", [$${labelHeight}$]))\n\n`;
+  code += `  content((${scaledXH + 0.65}, ${(yC / 2).toFixed(2)}), text(14pt, fill: rgb("${dimColor}"), weight: "bold", ["${labelHeight}"]))\n\n`;
 
   // 4. Ký hiệu góc vuông tại H
   code += `  // Góc vuông tại H\n`;
@@ -144,7 +144,7 @@ export function generateLighthouseElevation(params = {}) {
   // 7. Mũi tên đo khoảng cách AB (chữ to 14pt)
   code += `  // Mũi tên khoảng cách AB = ${distanceAB}\n`;
   code += `  line((${xA}, -0.3), (${xB}, -0.3), stroke: 1.8pt + rgb("${dimColor}"), mark: (start: ">", end: ">"))\n`;
-  code += `  content((${((xA + xB) / 2).toFixed(2)}, -0.65), text(14pt, fill: rgb("${dimColor}"), weight: "bold", [$${distanceAB}$]))\n\n`;
+  code += `  content((${((xA + xB) / 2).toFixed(2)}, -0.65), text(14pt, fill: rgb("${dimColor}"), weight: "bold", ["${distanceAB}"]))\n\n`;
 
   // 8. Đỉnh & Nhãn điểm (chữ to 14pt)
   code += `  // Nhãn các điểm A, B, C, H\n`;
@@ -153,10 +153,10 @@ export function generateLighthouseElevation(params = {}) {
   code += `  circle((${scaledXH}, 0), radius: 0.1, fill: black)\n`;
   code += `  circle((${xC}, ${yC}), radius: 0.1, fill: black)\n\n`;
 
-  code += `  content((${xA}, -0.65), text(14pt, weight: "bold", [$${labelA}$]))\n`;
-  code += `  content((${xB}, -0.65), text(14pt, weight: "bold", [$${labelB}$]))\n`;
-  code += `  content((${scaledXH}, -0.65), text(14pt, weight: "bold", [$${labelH}$]))\n`;
-  code += `  content((${xC}, ${yC + 0.45}), text(14pt, weight: "bold", [$${labelC}$]))\n`;
+  code += `  content((${xA}, -0.65), text(14pt, weight: "bold", ["${labelA}"]))\n`;
+  code += `  content((${xB}, -0.65), text(14pt, weight: "bold", ["${labelB}"]))\n`;
+  code += `  content((${scaledXH}, -0.65), text(14pt, weight: "bold", ["${labelH}"]))\n`;
+  code += `  content((${xC}, ${yC + 0.45}), text(14pt, weight: "bold", ["${labelC}"]))\n`;
 
   code += `})\n`;
 
@@ -223,7 +223,7 @@ export function generateTreeShadow(params = {}) {
   code += `
   // Chiều cao h (nét đứt đỏ, chữ to 14pt)
   line((${xB}, 0), (${xC}, ${yC.toFixed(2)}), stroke: (dash: "dashed", paint: rgb("${dimColor}"), thickness: 2pt))
-  content((${xB + 0.8}, ${(yC / 2).toFixed(2)}), text(14pt, fill: rgb("${dimColor}"), weight: "bold", [$${labelHeight}$]))
+  content((${xB + 0.8}, ${(yC / 2).toFixed(2)}), text(14pt, fill: rgb("${dimColor}"), weight: "bold", ["${labelHeight}"]))
 
   // Tia nắng tạo góc nâng (Tia AC)
   line((${xA}, 0), (${xC}, ${yC.toFixed(2)}), stroke: 2pt + rgb("#0284c7"))
@@ -234,7 +234,7 @@ export function generateTreeShadow(params = {}) {
 
   // Mũi tên chỉ bóng râm AB (chữ to 14pt)
   line((${xA}, -0.3), (${xB}, -0.3), stroke: 1.8pt + rgb("${dimColor}"), mark: (start: ">", end: ">"))
-  content(${((xA + xB) / 2).toFixed(2)}, -0.65, text(14pt, fill: rgb("${dimColor}"), weight: "bold", [$${shadowLength}$]))
+  content((${((xA + xB) / 2).toFixed(2)}, -0.65), text(14pt, fill: rgb("${dimColor}"), weight: "bold", ["${shadowLength}"]))
 
   // Góc vuông tại B
   line((${xB - 0.35}, 0), (${xB - 0.35}, 0.35), (${xB}, 0.35), stroke: 1.2pt + black)
@@ -244,9 +244,9 @@ export function generateTreeShadow(params = {}) {
   circle((${xB}, 0), radius: 0.1, fill: black)
   circle((${xC}, ${yC.toFixed(2)}), radius: 0.1, fill: black)
 
-  content((${xA}, -0.65), text(14pt, weight: "bold", [$${labelA}$]))
-  content((${xB}, -0.65), text(14pt, weight: "bold", [$${labelB}$]))
-  content((${xC}, ${(yC + 0.45).toFixed(2)}), text(14pt, weight: "bold", [$${labelC}$]))
+  content((${xA}, -0.65), text(14pt, weight: "bold", ["${labelA}"]))
+  content((${xB}, -0.65), text(14pt, weight: "bold", ["${labelB}"]))
+  content((${xC}, ${(yC + 0.45).toFixed(2)}), text(14pt, weight: "bold", ["${labelC}"]))
 })
 `;
 
@@ -282,11 +282,11 @@ export function generateTwoShipsDistance(params = {}) {
   // Ngọn hải đăng / Ngọn tháp ở H(1.0, 0)
   rect((0.5, 0), (1.5, 4.8), fill: rgb("#475569"), stroke: 1.2pt + black)
   circle((1.0, 4.8), radius: 0.1, fill: black)
-  content((1.0, -0.65), text(14pt, weight: "bold", [$${labelH}$]))
-  content((1.0, 5.25), text(14pt, weight: "bold", [$${labelC}$]))
+  content((1.0, -0.65), text(14pt, weight: "bold", ["${labelH}"]))
+  content((1.0, 5.25), text(14pt, weight: "bold", ["${labelC}"]))
 
   // Chiều cao tháp (chữ to 14pt)
-  content((0.2, 2.4), text(14pt, fill: rgb("#dc2626"), weight: "bold", [$${towerHeight}$]))
+  content((0.2, 2.4), text(14pt, fill: rgb("#dc2626"), weight: "bold", ["${towerHeight}"]))
 
   // Đường nằm ngang từ C (phương nằm ngang để tính góc hạ)
   line((1.0, 4.8), (8.5, 4.8), stroke: (dash: "dashed", paint: gray, thickness: 1.2pt))
@@ -303,12 +303,12 @@ export function generateTwoShipsDistance(params = {}) {
   line((${xA}, 0), (${xA}, 0.7), stroke: 1.5pt + black)
 
   // Mũi tên khoảng cách giữa 2 tàu (chữ to 14pt)
-  line((${xB}, -0.7), (${xA}, -0.7), stroke: 1.8pt + rgb("#dc2626"), mark: (start: ">", end: ">"))
-  content(${((xB + xA)/2).toFixed(2)}, -1.0, text(14pt, fill: rgb("#dc2626"), weight: "bold", [$${labelDist}$]))
+  line((${xB}, -0.7), (${xA}, -0.7), stroke: 1.8pt + rgb("${labelDist ? '#dc2626' : '#dc2626'}"), mark: (start: ">", end: ">"))
+  content((${((xB + xA)/2).toFixed(2)}, -1.0), text(14pt, fill: rgb("#dc2626"), weight: "bold", ["${labelDist}"]))
 
   // Nhãn tàu (chữ to 14pt)
-  content((${xB}, 1.05), text(14pt, weight: "bold", [$${labelB}$]))
-  content((${xA}, 1.05), text(14pt, weight: "bold", [$${labelA}$]))
+  content((${xB}, 1.05), text(14pt, weight: "bold", ["${labelB}"]))
+  content((${xA}, 1.05), text(14pt, weight: "bold", ["${labelA}"]))
 
   // Cung chỉ góc hạ tại C (chữ to 13pt)
   arc((1.0, 4.8), start: 0deg, stop: -30deg, radius: 1.5, stroke: 1.2pt + black)
