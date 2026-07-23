@@ -597,7 +597,7 @@ function App() {
                     <span className="zoom-hint">Ctrl+Scroll</span>
                   </div>
                   <div className="svg-container" onWheel={handleSvgWheel}>
-                    <div style={{ transform: `scale(${svgZoom})`, transformOrigin: 'center center', transition: 'transform 0.15s', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto' }}
+                    <div style={{ transform: `scale(${svgZoom})`, transformOrigin: 'center center', transition: 'transform 0.15s', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto', width: '100%', height: '100%' }}
                       dangerouslySetInnerHTML={{ __html: svgImage }} />
                   </div>
                 </div>
