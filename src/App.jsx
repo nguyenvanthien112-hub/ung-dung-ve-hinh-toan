@@ -194,6 +194,8 @@ function App() {
   const [typstCode, setTypstCode] = useState('')
   const [manualCode, setManualCode] = useState(TEMPLATES[0].code)
   const [fixSent, setFixSent] = useState(false)
+  const [customProblem, setCustomProblem] = useState('')
+  const [customCopied, setCustomCopied] = useState(false)
 
   // Style options
   const [styleOptions, setStyleOptions] = useState({
@@ -899,6 +901,41 @@ function App() {
                   <a href={GEMINI_GEM_URL} target="_blank" rel="noopener noreferrer" className="template-chip gemini-link-inline" style={{ textAlign: 'center', marginTop: '0.5rem' }}>
                     🤖 Mở Gemini AI →
                   </a>
+
+                  {/* Custom problem input */}
+                  <div className="custom-problem-box">
+                    <div className="custom-problem-header">
+                      <span>✏️ <strong>Bài toán khác</strong> — Nhập bài toán bất kỳ của bạn:</span>
+                    </div>
+                    <textarea
+                      className="custom-problem-input"
+                      rows={4}
+                      placeholder={'Ví dụ: Một con diều được thả dây dài 80m. Dây diều tạo với mặt đất góc 35°. Tính độ cao của con diều so với mặt đất...\n\nBạn mô tả bài toán càng chi tiết thì AI vẽ càng đẹp!'}
+                      value={customProblem}
+                      onChange={e => { setCustomProblem(e.target.value); setCustomCopied(false) }}
+                    />
+                    <div className="custom-problem-actions">
+                      <button
+                        className={`primary btn-sm custom-copy-btn ${customCopied ? 'copied' : ''}`}
+                        disabled={!customProblem.trim()}
+                        onClick={() => {
+                          const fullPrompt = REALWORLD_PROMPT_HEADER + customProblem.trim()
+                          navigator.clipboard.writeText(fullPrompt).catch(() => {})
+                          setCustomCopied(true)
+                          showToast('✓ Đã copy prompt! Mở Gemini AI → Dán vào → Nhận mã →')
+                          setTimeout(() => setCustomCopied(false), 3000)
+                        }}
+                      >
+                        {customCopied ? '✓ Đã Copy!' : '📋 Copy Prompt + Chỉ Thị Vẽ Đẹp'}
+                      </button>
+                      <a href={GEMINI_GEM_URL} target="_blank" rel="noopener noreferrer" className="btn-sm secondary">
+                        🤖 Mở Gemini AI
+                      </a>
+                    </div>
+                    <p className="custom-problem-hint">
+                      👆 Bấm <strong>Copy</strong> → Dán vào Gemini AI → Copy mã Typst → Dán vào ô <em>Manual</em> → <strong>Tạo Hình Vẽ</strong>
+                    </p>
+                  </div>
                 </div>
               </details>
 

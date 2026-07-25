@@ -2822,3 +2822,82 @@ kbd {
   font-weight: 400;
 }
 
+/* ==================== CUSTOM PROBLEM BOX ==================== */
+.custom-problem-box {
+  margin-top: 1rem;
+  background: rgba(251, 191, 36, 0.06);
+  border: 1.5px solid rgba(251, 191, 36, 0.35);
+  border-radius: 0.75rem;
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.custom-problem-header {
+  font-size: 0.88rem;
+  color: var(--text-main);
+}
+
+.custom-problem-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  color: var(--text-main);
+  font-size: 0.84rem;
+  font-family: inherit;
+  padding: 0.6rem 0.8rem;
+  resize: vertical;
+  line-height: 1.55;
+  transition: border-color 0.15s;
+}
+
+.custom-problem-input:focus {
+  outline: none;
+  border-color: rgba(251, 191, 36, 0.7);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.15);
+}
+
+.custom-problem-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.custom-copy-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  color: #1a1a1a !important;
+  font-weight: 700 !important;
+  border: none !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.5rem !important;
+  cursor: pointer;
+  transition: all 0.18s ease !important;
+}
+
+.custom-copy-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4) !important;
+}
+
+.custom-copy-btn.copied {
+  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+  color: #fff !important;
+}
+
+.custom-copy-btn:disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+}
+
+.custom-problem-hint {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
