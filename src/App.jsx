@@ -65,15 +65,16 @@ YÊU CẦU THIẾT KẾ (QUAN TRỌNG):
 - Chiều cao h: nét đứt đỏ rgb("#dc2626"), label to 14pt màu đỏ
 - Các số đo (khoảng cách, góc): chữ to 13-14pt, màu đỏ
 
-- ⚠️ QUY TẮC VẼ CUNG GÓC (ARC) BẮT BUỘC KHÔNG ĐƯỢC VẼ SAI/LỆCH:
-  • Trong CeTZ: 0deg = hướng NẰM NGANG SANG PHẢI; 90deg = hướng LÊN TRÊN; 180deg = SANG TRÁI; 270deg = XUỐNG DƯỚI.
-  • Với góc nghiêng α so với PHƯƠNG NGANG BÊN PHẢI (ví dụ α=35° tại đỉnh A):
-    => BẮT BUỘC vẽ: arc((A), start: 0deg, stop: 35deg, radius: 1.0, stroke: 1.5pt + rgb("#dc2626"))
-    => KHÔNG ĐƯỢC dùng start: 90deg hay góc nào khác! (Nếu dùng 90deg arc sẽ bị đâm ngược vào trong tòa nhà/vật thể).
-  • Với góc hạ α từ đỉnh nhìn xuống phía bên phải:
-    => BẮT BUỘC vẽ: arc((điểm), start: -αdeg, stop: 0deg, radius: 1.0, stroke: 1.5pt + rgb("#dc2626"))
-  • Vị trí chữ ghi số đo góc (ví dụ [$35^\circ$]):
-    => Đặt ở phía ngoài cung góc một chút, ngang tầm tầm giữa góc (ví dụ góc 35° thì đặt chữ tại hướng khoảng 17° so với đỉnh).
+- ⚠️ QUY TẮC VẼ CUNG GÓC (ARC) BẮT BUỘC — TRÁNH LỖI VẼ LỆCH VÀO TƯỜNG:
+  • Trong CeTZ: 0deg = hướng NẰM NGANG SANG PHẢI; 90deg = hướng THẲNG ĐỨNG LÊN TRÊN.
+  • "Góc ngẩng α so với PHƯƠNG NGANG" LÀ GÓC TỪ ĐƯỜNG NẰM NGANG BÊN PHẢI (0deg) ĐẾN TIA NGHƯƠNG (αdeg).
+  • BẮT BUỘC VẼ: `arc((tâm), start: 0deg, stop: αdeg, radius: 1.0, stroke: 1.5pt + rgb("#dc2626"))`
+  • 🚨 TUYỆT ĐỐI NGIÊM CẤM DÙNG `start: αdeg, stop: 90deg` HOẶC `stop: 90deg`!
+    (Nếu viết `start: 35deg, stop: 90deg`, cung góc sẽ bị vẽ đâm ngược lên tường nhà thẳng đứng 90°!).
+  • Ví dụ cụ thể:
+    - Tại A (góc 35°): `arc((A), start: 0deg, stop: 35deg, radius: 1.0, stroke: 1.5pt + rgb("#dc2626"))`
+    - Tại B (góc 15°): `arc((B), start: 0deg, stop: 15deg, radius: 1.2, stroke: 1.5pt + rgb("#dc2626"))`
+  • Vị trí chữ ghi góc (ví dụ [$35^\circ$]): Đặt ở phía ngoài cung góc một chút, tại hướng khoảng α/2 (ví dụ góc 35° đặt tại 17.5°).
 
 - Nhãn điểm (A, B, C, D...): chữ to 14pt, in đậm (weight: "bold"), nằm ngoài vật thể rõ ràng.
 - Chỉ trả về mã Typst thuần trong canvas({...}), KHÔNG giải thích, KHÔNG dùng markdown \`\`\`typst\`\`\`.
@@ -82,6 +83,19 @@ BÀI TOÁN CẦN VẼ:
 `
 
 const REALWORLD_PROMPTS = [
+  {
+    name: '🏢 Tòa nhà quan sát Tháp',
+    desc: 'Quan sát đỉnh D từ chân A và đỉnh B của tòa nhà',
+    text: REALWORLD_PROMPT_HEADER + `Từ chân A và đỉnh B của một tòa nhà cao 60m, người ta quan sát đỉnh D của một tháp cao kề bên. Góc nâng từ A đến D là 35°, góc nâng từ B đến D là 15°. Kẻ đường nằm ngang BH từ B đến tháp (tại H). Tính chiều cao h của tháp.
+
+YÊU CẦU VẼ VẬT THỂ: 
+- Tòa nhà bên trái cao 60m (có cửa sổ màu xanh, chữ 60m ở bên trái).
+- Tháp bên phải cao h = ? (có màu vàng, nét sọc xéo trang trí).
+- Đường nằm ngang nét đứt BH kết nối từ đỉnh B sang tháp tại H (có ký hiệu góc vuông tại H và C).
+- Tia ngắm AD (xanh đậm 2pt) từ A lên D. Tia ngắm BD (xanh đậm 2pt) từ B lên D.
+- Cung góc 35° tại A phải nằm GIỮA đất ngang AC và tia AD (start: 0deg, stop: 35deg).
+- Cung góc 15° tại B phải nằm GIỮA đường ngang BH và tia BD (start: 0deg, stop: 15deg).`
+  },
   {
     name: '🏗️ Tòa nhà / Hải đăng',
     desc: 'Đứng từ 2 điểm A, B quan sát đỉnh C',
