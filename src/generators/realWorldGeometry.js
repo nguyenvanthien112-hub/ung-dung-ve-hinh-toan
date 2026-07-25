@@ -324,6 +324,138 @@ export function generateTwoShipsDistance(params = {}) {
 
   return code;
 }
+// 4. Cây cầu vòm Parabol
+export function generateBridgeParabola(params = {}) {
+  const {
+    bridgeWidth = '100 m',
+    bridgeHeight = '30 m',
+    labelA = 'A',
+    labelB = 'B',
+    labelO = 'O'
+  } = params;
+
+  let code = `#import "@preview/cetz:0.3.2": canvas, draw, plot
+#set page(width: auto, height: auto, margin: 10pt)
+
+#canvas({
+  import draw: *
+
+  // Bối cảnh: Bầu trời & Dòng sông
+  rect((-6.0, -2.0), (6.0, 0), fill: rgb("#0284c7").lighten(50%), stroke: none)
+  rect((-6.0, 0), (6.0, 5.0), fill: rgb("#e0f2fe"), stroke: none)
+
+  // Mặt cầu
+  line((-6.0, 0), (6.0, 0), stroke: 4pt + rgb("#475569"))
+  
+  // Trụ cầu hai bên
+  rect((-4.5, -2.0), (-3.5, 0), fill: rgb("#94a3b8"), stroke: 1pt + black)
+  rect((3.5, -2.0), (4.5, 0), fill: rgb("#94a3b8"), stroke: 1pt + black)
+
+  // Vòm Parabol (y = -a * x^2 + h) với h = 4, ngang từ -4 đến 4
+  plot.plot(
+    size: (12, 6),
+    x-min: -6, x-max: 6,
+    y-min: -2, y-max: 5,
+    axis-style: "none",
+    {
+      plot.add(
+        domain: (-4, 4),
+        x => -0.25 * x * x + 4,
+        style: (stroke: 3pt + rgb("#b91c1c"))
+      )
+    }
+  )
+
+  // Cáp treo từ vòm xuống mặt cầu
+  for x in (-3, -2, -1, 0, 1, 2, 3) {
+    let y = -0.25 * x * x + 4
+    line((x, 0), (x, y), stroke: 1pt + gray)
+  }
+
+  // Ký hiệu điểm
+  circle((-4, 0), radius: 0.1, fill: black)
+  circle((4, 0), radius: 0.1, fill: black)
+  circle((0, 4), radius: 0.1, fill: black)
+  circle((0, 0), radius: 0.1, fill: black)
+
+  content((-4, -0.5), text(14pt, weight: "bold", ["${labelA}"]))
+  content((4, -0.5), text(14pt, weight: "bold", ["${labelB}"]))
+  content((0, 4.4), text(14pt, weight: "bold", ["${labelO}"]))
+
+  // Mũi tên khoảng cách
+  line((-4, -0.8), (4, -0.8), stroke: 1.5pt + rgb("#dc2626"), mark: (start: ">", end: ">"))
+  content((0, -1.2), text(14pt, fill: rgb("#dc2626"), weight: "bold", ["${bridgeWidth}"]))
+
+  // Chiều cao
+  line((0, 0), (0, 4), stroke: (dash: "dashed", paint: rgb("#dc2626"), thickness: 1.5pt))
+  content((0.8, 2.0), text(14pt, fill: rgb("#dc2626"), weight: "bold", ["${bridgeHeight}"]))
+})
+`;
+
+  return code;
+}
+
+// 5. Máy bay bay trên trời
+export function generateAirplaneAngle(params = {}) {
+  const {
+    altitude = '1000 m',
+    angleA = 40,
+    angleB = 60,
+    labelA = 'A',
+    labelB = 'B',
+    labelPlane = 'C'
+  } = params;
+
+  let code = `#import "@preview/cetz:0.3.2": canvas, draw
+#set page(width: auto, height: auto, margin: 10pt)
+
+#canvas({
+  import draw: *
+
+  // Bối cảnh: Bầu trời & Mặt đất
+  rect((-2.0, -1.5), (9.0, 0), fill: rgb("#d97706").lighten(60%), stroke: none)
+  rect((-2.0, 0), (9.0, 6.0), fill: rgb("#e0f2fe"), stroke: none)
+  line((-2.0, 0), (9.0, 0), stroke: 2pt + black)
+
+  let xA = 0
+  let xB = 6
+  let h = 4.5
+  let aRad = ${angleA} * 3.14159 / 180
+  let bRad = ${angleB} * 3.14159 / 180
+  let xC = h / calc.tan(${angleA}deg)
+  
+  // Máy bay (tượng trưng)
+  line((xC - 0.5, h), (xC + 0.5, h), stroke: 4pt + rgb("#1d4ed8"))
+  line((xC, h - 0.2), (xC + 0.2, h), stroke: 3pt + rgb("#1d4ed8")) // Cánh
+  line((xC - 0.4, h), (xC - 0.6, h + 0.3), stroke: 2pt + rgb("#1d4ed8")) // Đuôi
+
+  // Tia nhìn
+  line((xA, 0), (xC, h), stroke: 2pt + rgb("#059669"))
+  line((xB, 0), (xC, h), stroke: 2pt + rgb("#059669"))
+
+  // Chiều cao
+  line((xC, 0), (xC, h), stroke: (dash: "dashed", paint: rgb("#dc2626"), thickness: 1.5pt))
+  content((xC + 0.8, h / 2), text(14pt, fill: rgb("#dc2626"), weight: "bold", ["${altitude}"]))
+  line((xC - 0.3, 0), (xC - 0.3, 0.3), (xC, 0.3), stroke: 1pt + black)
+
+  // Điểm
+  circle((xA, 0), radius: 0.1, fill: black)
+  circle((xB, 0), radius: 0.1, fill: black)
+  
+  content((xA, -0.5), text(14pt, weight: "bold", ["${labelA}"]))
+  content((xB, -0.5), text(14pt, weight: "bold", ["${labelB}"]))
+  content((xC, h + 0.5), text(14pt, weight: "bold", ["${labelPlane}"]))
+
+  // Góc
+  arc((xA, 0), start: 0deg, stop: ${angleA}deg, radius: 1.5, stroke: 1.2pt + black)
+  content((xA + 2.0, 0.6), text(13pt, weight: "bold", [$${angleA}°$]))
+
+  arc((xB, 0), start: 180deg - ${angleB}deg, stop: 180deg, radius: 1.2, stroke: 1.2pt + black)
+  content((xB - 1.6, 0.6), text(13pt, weight: "bold", [$${angleB}°$]))
+})
+`;
+  return code;
+}
 
 // Router chung cho generator bài toán thực tế
 export function generateRealWorldGeometry(shapeId, params = {}) {
@@ -334,6 +466,10 @@ export function generateRealWorldGeometry(shapeId, params = {}) {
       return generateTreeShadow(params);
     case 'two-ships-distance':
       return generateTwoShipsDistance(params);
+    case 'bridge-parabola':
+      return generateBridgeParabola(params);
+    case 'airplane-angle':
+      return generateAirplaneAngle(params);
     default:
       return generateLighthouseElevation(params);
   }

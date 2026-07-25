@@ -357,7 +357,9 @@ export const SHAPE_CATEGORIES = {
         shapes: [
           { id: 'lighthouse-elevation', name: 'Ngọn hải đăng / Tòa nhà (2 góc quan sát)', description: 'Quan sát ngọn hải đăng/tòa nhà từ 2 vị trí A và B (góc nghiêng α, β)' },
           { id: 'tree-shadow', name: 'Chiều cao cây / Cột cờ (Bóng râm)', description: 'Bài toán bóng râm và góc nâng mặt trời' },
-          { id: 'two-ships-distance', name: 'Hai con tàu trên biển', description: 'Từ đỉnh đài quan sát nhìn xuống 2 con tàu' }
+          { id: 'two-ships-distance', name: 'Hai con tàu trên biển', description: 'Từ đỉnh đài quan sát nhìn xuống 2 con tàu' },
+          { id: 'bridge-parabola', name: 'Cây cầu vòm Parabol', description: 'Bài toán tính chiều cao hoặc độ rộng của cây cầu vòm' },
+          { id: 'airplane-angle', name: 'Máy bay bay trên trời', description: 'Góc quan sát máy bay từ 2 điểm trên mặt đất' }
         ]
       }
     }

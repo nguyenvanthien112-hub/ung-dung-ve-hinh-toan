@@ -1496,6 +1496,27 @@ export const FORM_SCHEMAS = {
       { name: 'labelB', label: 'Nhãn tàu B', type: 'text', default: 'Tàu B' },
       { name: 'labelDist', label: 'Nhãn khoảng cách', type: 'text', default: 'd = ?' }
     ]
+  },
+
+  'bridge-parabola': {
+    fields: [
+      { name: 'bridgeWidth', label: 'Khẩu độ cầu (rộng)', type: 'text', default: '100 m' },
+      { name: 'bridgeHeight', label: 'Chiều cao vòm', type: 'text', default: '30 m' },
+      { name: 'labelA', label: 'Nhãn điểm đầu A', type: 'text', default: 'A' },
+      { name: 'labelB', label: 'Nhãn điểm cuối B', type: 'text', default: 'B' },
+      { name: 'labelO', label: 'Nhãn đỉnh vòm O', type: 'text', default: 'O' }
+    ]
+  },
+
+  'airplane-angle': {
+    fields: [
+      { name: 'altitude', label: 'Độ cao máy bay', type: 'text', default: '1000 m' },
+      { name: 'angleA', label: 'Góc ngẩng từ A (°)', type: 'number', min: 5, max: 85, default: 40, unit: '°' },
+      { name: 'angleB', label: 'Góc ngẩng từ B (°)', type: 'number', min: 5, max: 85, default: 60, unit: '°' },
+      { name: 'labelA', label: 'Nhãn điểm A', type: 'text', default: 'A' },
+      { name: 'labelB', label: 'Nhãn điểm B', type: 'text', default: 'B' },
+      { name: 'labelPlane', label: 'Nhãn Máy bay', type: 'text', default: 'C' }
+    ]
   }
 };
 
