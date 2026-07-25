@@ -50,6 +50,86 @@ const PROMPT_SUGGESTIONS = [
   }
 ]
 
+// ==================== PROMPT BÀI TOÁN THỰC TẾ ====================
+// Các lệnh này yêu cầu AI tạo hình vẽ có bối cảnh thực tế như trong sách giáo khoa
+const REALWORLD_PROMPT_HEADER = `Hãy viết mã Typst/CeTZ 0.3.2 để vẽ hình minh họa bài toán thực tế dưới đây.
+
+YÊU CẦU THIẾT KẾ (QUAN TRỌNG):
+- Trang: #set page(width: auto, height: auto, margin: 10pt)
+- Canvas to, rộng mở (khoảng 12×7 đơn vị)
+- VẼ MÔ HÌNH THỰC TẾ có màu sắc đẹp, giống hình trong sách giáo khoa:
+  • Có nền bầu trời (rect màu xanh nhạt rgb("#e0f2fe"))
+  • Có mặt đất / mặt biển (rect màu đất/xanh nước) 
+  • Vật thể chính phải được vẽ chi tiết với màu sắc (không chỉ là đường thẳng đơn giản)
+- Đường tia nhìn / tia nắng: nét xanh đậm 2pt
+- Chiều cao h: nét đứt đỏ rgb("#dc2626"), label to 14pt màu đỏ
+- Các số đo (khoảng cách, góc): chữ to 13-14pt, màu đỏ
+- Nhãn điểm: chữ to 14pt, in đậm (weight: "bold")
+- Ký hiệu góc: dùng arc(...), cung bán kính 1.0–1.5
+- Chỉ trả về mã Typst thuần, KHÔNG giải thích, KHÔNG dùng markdown.
+
+BÀI TOÁN CẦN VẼ:
+`
+
+const REALWORLD_PROMPTS = [
+  {
+    name: '🏗️ Tòa nhà / Hải đăng',
+    desc: 'Đứng từ 2 điểm A, B quan sát đỉnh C',
+    text: REALWORLD_PROMPT_HEADER + `Từ điểm A và B cách nhau 40m trên mặt đất phẳng, người ta quan sát đỉnh C của một tòa nhà cao tầng với góc nghiêng lần lượt là 30° và 60°. Tính chiều cao tòa nhà CH.
+
+YÊU CẦU VẼ VẬT THỂ: Tòa nhà phải có đủ các tầng, cửa sổ (vẽ bằng rect màu xanh), mái nhà phẳng. Nền: bầu trời nhạt phía trên, mặt đất màu nâu phía dưới.`
+  },
+  {
+    name: '🌳 Cây xanh / Cột cờ',
+    desc: 'Bóng râm và góc nâng mặt trời',
+    text: REALWORLD_PROMPT_HEADER + `Một cây xanh đứng thẳng. Khi góc nâng của mặt trời là 45°, bóng của cây trên mặt đất dài 15m. Tính chiều cao của cây.
+
+YÊU CẦU VẼ VẬT THỂ: Cây phải có thân cây màu nâu (rect), tán lá xanh lá (circle to), mặt trời màu vàng (circle + tia nắng). Bầu trời xanh nhạt phía trên, bãi cỏ xanh phía dưới. Bóng cây là đường nằm ngang có mũi tên đo khoảng cách. Tia nắng đứt chấm màu vàng.`
+  },
+  {
+    name: '✈️ Máy bay trên trời',
+    desc: 'Góc ngẩng từ 2 điểm mặt đất',
+    text: REALWORLD_PROMPT_HEADER + `Một máy bay đang bay ở độ cao h so với mặt đất. Từ 2 điểm A và B cách nhau 5km trên mặt đất, góc ngẩng để nhìn máy bay lần lượt là 40° và 60°. Tính h.
+
+YÊU CẦU VẼ VẬT THỂ: Máy bay phải được vẽ có hình dạng rõ ràng (thân dài, 2 cánh chữ V hai bên, đuôi đứng). Bầu trời xanh gradient. Mặt đất màu nâu/xanh lá. Đường tia nhìn màu xanh lá.`
+  },
+  {
+    name: '🌉 Cây cầu vòm',
+    desc: 'Chiều cao vòm cầu parabol',
+    text: REALWORLD_PROMPT_HEADER + `Một cây cầu vòm (hình parabol) có khẩu độ (bề rộng) là 80m và chiều cao vòm là 20m tính từ mặt cầu. Tính chiều cao của vòm cầu tại điểm cách điểm giữa 20m.
+
+YÊU CẦU VẼ VẬT THỂ: Cầu phải có vòm parabol màu đỏ nổi bật, mặt cầu màu xám (rect dày), trụ cầu bằng bê tông (rect màu xám). Phía dưới cầu là dòng sông màu xanh dương. Bầu trời xanh nhạt phía trên. Các dây cáp treo thẳng đứng từ vòm xuống mặt cầu.`
+  },
+  {
+    name: '🚢 Tàu thuyền trên biển',
+    desc: 'Từ đài quan sát nhìn xuống 2 tàu',
+    text: REALWORLD_PROMPT_HEADER + `Từ đỉnh C của một ngọn hải đăng cao 60m, người quan sát nhìn xuống 2 con tàu A và B ở 2 phía trên biển với góc hạ lần lượt là 35° và 50°. Tính khoảng cách giữa 2 tàu.
+
+YÊU CẦU VẼ VẬT THỂ: Ngọn hải đăng có sọc đỏ trắng xen kẽ, phòng đèn màu vàng ở trên đỉnh, mái nón nhọn màu đỏ. 2 con tàu phải có hình dáng thực (thân tàu + cột buồm + cờ nhỏ). Biển màu xanh dương. Bầu trời nhạt với vài đám mây trắng.`
+  },
+  {
+    name: '🏔️ Núi / Đồi cao',
+    desc: 'Quan sát đỉnh núi từ mặt đất',
+    text: REALWORLD_PROMPT_HEADER + `Từ 2 điểm A và B cách nhau 2km trên mặt đất phẳng, người ta quan sát đỉnh núi C. Góc nghiêng tại A là 25° và tại B là 45°. Tính chiều cao đỉnh núi so với mặt phẳng AB.
+
+YÊU CẦU VẼ VẬT THỂ: Núi phải được vẽ như tam giác lớn có màu xanh lá đậm ở thân, màu xám ở phần đỉnh cao (tuyết/đá), hình dáng tự nhiên không đều. Bầu trời xanh với mặt trời. Mặt đất xanh lá.`
+  },
+  {
+    name: '🏗️ Cái thang dựa tường',
+    desc: 'Thang nghiêng tựa vào tường',
+    text: REALWORLD_PROMPT_HEADER + `Một cái thang dài 5m được dựa vào bức tường thẳng đứng. Chân thang cách chân tường 3m. Tính góc tạo bởi thang và mặt đất, và chiều cao điểm thang chạm tường.
+
+YÊU CẦU VẼ VẬT THỂ: Vẽ bức tường gạch (rect màu nâu đỏ, có các hàng gạch), mặt đất (rect màu xám), và cái thang bằng gỗ (2 thanh dọc màu nâu + nhiều thanh ngang). Thể hiện góc nghiêng rõ ràng. Ký hiệu góc vuông tại chân tường.`
+  },
+  {
+    name: '🌅 Góc nghiêng bờ dốc',
+    desc: 'Mái dốc hoặc sườn đồi',
+    text: REALWORLD_PROMPT_HEADER + `Một sườn đồi nghiêng tạo góc 30° so với mặt phẳng ngang. Một người đứng ở điểm A cách chân đồi 100m đo được góc ngẩng đến đỉnh đồi B là 50°. Tính độ cao của đỉnh đồi B.
+
+YÊU CẦU VẼ VẬT THỂ: Sườn đồi có màu xanh lá, bầu trời xanh, mặt đất ngang màu nâu. Có cây nhỏ trên sườn đồi. Vẽ rõ góc nghiêng và các đường đo.`
+  }
+]
+
 const HISTORY_KEY = 'typst_draw_history'
 const GEMINI_GEM_URL = 'https://gemini.google.com/gem/1kO2UILx2K833tdJSqC0DWiTTtsOVEz_5?usp=sharing'
 
@@ -793,17 +873,31 @@ function App() {
                 <PromptColorBuilder geminiUrl={GEMINI_GEM_URL} />
               </details>
 
-              {/* AI Prompts */}
-              <details className="section-card">
-                <summary><strong>🤖 Gợi Ý Prompt AI</strong></summary>
-                <div className="template-chips-list">
-                  {PROMPT_SUGGESTIONS.map((p, i) => (
-                    <div key={i} className="template-chip prompt-chip" onClick={() => { setMode('manual'); setManualCode(p.text) }}>
-                      {p.name}
-                    </div>
-                  ))}
-                  <a href={GEMINI_GEM_URL} target="_blank" rel="noopener noreferrer" className="template-chip gemini-link-inline" style={{ textAlign: 'center' }}>
-                    Mở Gemini AI →
+              {/* Real-world Problem Prompts */}
+              <details className="section-card" open>
+                <summary><strong>🏞️ Prompt Bài Toán Thực Tế (Vẽ Đẹp Như Sách)</strong></summary>
+                <div className="realworld-prompt-grid">
+                  <p className="realworld-prompt-note">
+                    💡 Bấm vào một dạng bài → Copy toàn bộ text xuất hiện → Dán vào Gemini AI → Nhận mã → Dán vào ô Code Editor → Tạo Hình Vẽ.
+                    <br/>Mỗi prompt đã yêu cầu AI vẽ <strong>mô hình thực tế chi tiết</strong> (có màu sắc, bối cảnh, vật thể giống sách GK).
+                  </p>
+                  <div className="template-chips-list">
+                    {REALWORLD_PROMPTS.map((p, i) => (
+                      <div key={i} className="template-chip realworld-chip"
+                        onClick={() => {
+                          navigator.clipboard.writeText(p.text).catch(() => {})
+                          setManualCode(p.text)
+                          showToast('✓ Đã copy prompt! Dán vào Gemini AI →')
+                        }}
+                        title={p.desc}
+                      >
+                        <span className="chip-name">{p.name}</span>
+                        <span className="chip-desc">{p.desc}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <a href={GEMINI_GEM_URL} target="_blank" rel="noopener noreferrer" className="template-chip gemini-link-inline" style={{ textAlign: 'center', marginTop: '0.5rem' }}>
+                    🤖 Mở Gemini AI →
                   </a>
                 </div>
               </details>
