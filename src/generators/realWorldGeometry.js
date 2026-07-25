@@ -24,28 +24,47 @@ export function generateLighthouseElevation(params = {}) {
   const aRad = (aDeg * Math.PI) / 180;
   const bRad = (bDeg * Math.PI) / 180;
 
-  // Tọa độ rộng mở cho hình to đẹp (xA = 1.5, xB = 6.0)
+  // Bố cục: A ở bên trái, B ở giữa, H là chân đường vuông góc bên phải B
+  // Đặt A = xA, B = xB cố định trên mặt đất
+  // C = (xH, h) — đỉnh vật thể
+  // Điều kiện: tan(aDeg) = h / (xH - xA), tan(bDeg) = h / (xH - xB)
+  // => h = (xH - xA)*tanA = (xH - xB)*tanB
+  // => xH*(tanB - tanA) = xB*tanB - xA*tanA
+  // => xH = (xB*tanB - xA*tanA) / (tanB - tanA)
+
   const xA = 1.5;
-  const xB = 6.0;
+  const xB = 6.0;  // B nằm giữa A và H (vì bDeg > aDeg thường)
 
   const tanA = Math.tan(aRad);
   const tanB = Math.tan(bRad);
 
-  let xH = (xB * tanB - xA * tanA) / (tanB - tanA);
-  if (!isFinite(xH) || xH <= xB) xH = 8.5;
-
-  let h = (xH - xA) * tanA;
-  if (!isFinite(h) || h <= 0) h = 5.5;
-
-  // Scale vừa đẹp trong canvas (tối đa 5.2 đơn vị)
-  const maxH = 5.2;
-  let scaleRatio = 1.0;
-  if (h > maxH) {
-    scaleRatio = maxH / h;
+  // Giải hệ phương trình cho xH và h
+  let xH, h;
+  if (Math.abs(tanB - tanA) > 0.001) {
+    xH = (xB * tanB - xA * tanA) / (tanB - tanA);
+    h = (xH - xA) * tanA;
+  } else {
+    // Hai góc gần bằng nhau, fallback
+    xH = 9.0;
+    h = (xH - xA) * tanA;
   }
 
-  const scaledH = Number((h * scaleRatio).toFixed(2));
-  const scaledXH = Number(((xH - xA) * scaleRatio + xA).toFixed(2));
+  // Đảm bảo H luôn nằm bên phải B (bài toán có nghĩa)
+  if (xH <= xB || h <= 0) {
+    xH = 9.5;
+    h = 5.0;
+  }
+
+  // Scale vừa đẹp trong canvas (tối đa 5.2 đơn vị cao)
+  const maxH = 5.2;
+  const scaleRatio = h > maxH ? maxH / h : 1.0;
+
+  const scaledH  = Number((h  * scaleRatio).toFixed(3));
+  const scaledXH = Number((xA + (xH - xA) * scaleRatio).toFixed(3));
+  // A và B cũng phải được scale theo tỉ lệ ngang tương tự
+  const scaledXA = xA;
+  const scaledXB = Number((xA + (xB - xA) * scaleRatio).toFixed(3));
+
   const xC = scaledXH;
   const yC = scaledH;
   const rightBound = Math.max(11.5, scaledXH + 2.5);
@@ -131,31 +150,33 @@ export function generateLighthouseElevation(params = {}) {
 
   // 5. Tia ngắm AC và BC (nét nổi bật 2pt)
   code += `  // Tia ngắm từ A và B tới đỉnh C\n`;
-  code += `  line((${xA}, 0), (${xC}, ${yC}), stroke: 2pt + rgb("${strokeColor}"))\n`;
-  code += `  line((${xB}, 0), (${xC}, ${yC}), stroke: 2pt + rgb("${strokeColor}"))\n\n`;
+  code += `  line((${scaledXA}, 0), (${xC}, ${yC}), stroke: 2pt + rgb("${strokeColor}"))\n`;
+  code += `  line((${scaledXB}, 0), (${xC}, ${yC}), stroke: 2pt + rgb("${strokeColor}"))\n\n`;
 
   // 6. Cung chỉ góc nghiêng (chữ to 13pt)
+  // Góc tại A: tia ngắm đi từ A lên phải => arc từ 0° đến aDeg
   code += `  // Cung chỉ góc\n`;
-  code += `  arc((${xA}, 0), start: 0deg, stop: ${aDeg}deg, radius: 1.2, stroke: 1.2pt + black)\n`;
-  code += `  content((${xA + 1.8}, 0.5), text(13pt, weight: "bold", [$${aDeg}°$]))\n`;
+  code += `  arc((${scaledXA}, 0), start: 0deg, stop: ${aDeg}deg, radius: 1.2, stroke: 1.2pt + black)\n`;
+  code += `  content((${scaledXA + 1.8}, 0.55), text(13pt, weight: "bold", [$${aDeg}°$]))\n`;
 
-  code += `  arc((${xB}, 0), start: 0deg, stop: ${bDeg}deg, radius: 0.95, stroke: 1.2pt + black)\n`;
-  code += `  content((${xB + 1.35}, 0.5), text(13pt, weight: "bold", [$${bDeg}°$]))\n\n`;
+  // Góc tại B: tia ngắm đi từ B lên phải tới C => arc từ 0deg đến bDeg
+  code += `  arc((${scaledXB}, 0), start: 0deg, stop: ${bDeg}deg, radius: 0.9, stroke: 1.2pt + black)\n`;
+  code += `  content((${scaledXB + 1.3}, 0.55), text(13pt, weight: "bold", [$${bDeg}°$]))\n\n`;
 
   // 7. Mũi tên đo khoảng cách AB (chữ to 14pt)
   code += `  // Mũi tên khoảng cách AB = ${distanceAB}\n`;
-  code += `  line((${xA}, -0.3), (${xB}, -0.3), stroke: 1.8pt + rgb("${dimColor}"), mark: (start: ">", end: ">"))\n`;
-  code += `  content((${((xA + xB) / 2).toFixed(2)}, -0.65), text(14pt, fill: rgb("${dimColor}"), weight: "bold", ["${distanceAB}"]))\n\n`;
+  code += `  line((${scaledXA}, -0.3), (${scaledXB}, -0.3), stroke: 1.8pt + rgb("${dimColor}"), mark: (start: ">", end: ">"))\n`;
+  code += `  content((${((scaledXA + scaledXB) / 2).toFixed(2)}, -0.65), text(14pt, fill: rgb("${dimColor}"), weight: "bold", ["${distanceAB}"]))\n\n`;
 
   // 8. Đỉnh & Nhãn điểm (chữ to 14pt)
   code += `  // Nhãn các điểm A, B, C, H\n`;
-  code += `  circle((${xA}, 0), radius: 0.1, fill: black)\n`;
-  code += `  circle((${xB}, 0), radius: 0.1, fill: black)\n`;
+  code += `  circle((${scaledXA}, 0), radius: 0.1, fill: black)\n`;
+  code += `  circle((${scaledXB}, 0), radius: 0.1, fill: black)\n`;
   code += `  circle((${scaledXH}, 0), radius: 0.1, fill: black)\n`;
   code += `  circle((${xC}, ${yC}), radius: 0.1, fill: black)\n\n`;
 
-  code += `  content((${xA}, -0.65), text(14pt, weight: "bold", ["${labelA}"]))\n`;
-  code += `  content((${xB}, -0.65), text(14pt, weight: "bold", ["${labelB}"]))\n`;
+  code += `  content((${scaledXA}, -0.65), text(14pt, weight: "bold", ["${labelA}"]))\n`;
+  code += `  content((${scaledXB}, -0.65), text(14pt, weight: "bold", ["${labelB}"]))\n`;
   code += `  content((${scaledXH}, -0.65), text(14pt, weight: "bold", ["${labelH}"]))\n`;
   code += `  content((${xC}, ${yC + 0.45}), text(14pt, weight: "bold", ["${labelC}"]))\n`;
 

@@ -61,12 +61,22 @@ YÊU CẦU THIẾT KẾ (QUAN TRỌNG):
   • Có nền bầu trời (rect màu xanh nhạt rgb("#e0f2fe"))
   • Có mặt đất / mặt biển (rect màu đất/xanh nước) 
   • Vật thể chính phải được vẽ chi tiết với màu sắc (không chỉ là đường thẳng đơn giản)
-- Đường tia nhìn / tia nắng: nét xanh đậm 2pt
+- Đường tia nhìn / tia nắng: nét xanh đậm 2pt (rgb("#1d4ed8") hoặc rgb("#059669"))
 - Chiều cao h: nét đứt đỏ rgb("#dc2626"), label to 14pt màu đỏ
 - Các số đo (khoảng cách, góc): chữ to 13-14pt, màu đỏ
-- Nhãn điểm: chữ to 14pt, in đậm (weight: "bold")
-- Ký hiệu góc: dùng arc(...), cung bán kính 1.0–1.5
-- Chỉ trả về mã Typst thuần, KHÔNG giải thích, KHÔNG dùng markdown.
+
+- ⚠️ QUY TẮC VẼ CUNG GÓC (ARC) BẮT BUỘC KHÔNG ĐƯỢC VẼ SAI/LỆCH:
+  • Trong CeTZ: 0deg = hướng NẰM NGANG SANG PHẢI; 90deg = hướng LÊN TRÊN; 180deg = SANG TRÁI; 270deg = XUỐNG DƯỚI.
+  • Với góc nghiêng α so với PHƯƠNG NGANG BÊN PHẢI (ví dụ α=35° tại đỉnh A):
+    => BẮT BUỘC vẽ: arc((A), start: 0deg, stop: 35deg, radius: 1.0, stroke: 1.5pt + rgb("#dc2626"))
+    => KHÔNG ĐƯỢC dùng start: 90deg hay góc nào khác! (Nếu dùng 90deg arc sẽ bị đâm ngược vào trong tòa nhà/vật thể).
+  • Với góc hạ α từ đỉnh nhìn xuống phía bên phải:
+    => BẮT BUỘC vẽ: arc((điểm), start: -αdeg, stop: 0deg, radius: 1.0, stroke: 1.5pt + rgb("#dc2626"))
+  • Vị trí chữ ghi số đo góc (ví dụ [$35^\circ$]):
+    => Đặt ở phía ngoài cung góc một chút, ngang tầm tầm giữa góc (ví dụ góc 35° thì đặt chữ tại hướng khoảng 17° so với đỉnh).
+
+- Nhãn điểm (A, B, C, D...): chữ to 14pt, in đậm (weight: "bold"), nằm ngoài vật thể rõ ràng.
+- Chỉ trả về mã Typst thuần trong canvas({...}), KHÔNG giải thích, KHÔNG dùng markdown \`\`\`typst\`\`\`.
 
 BÀI TOÁN CẦN VẼ:
 `
@@ -168,6 +178,7 @@ function buildFixPrompt(code, errorMsg) {
     '  5. Điểm dùng tuple: let A = (x, y); circle((x,y), radius: r)',
     '  6. Nhãn: content(A, [A], anchor: "south")',
     '  7. Nét đứt: stroke: (paint: black, thickness: 1pt, dash: "dashed")',
+    '  8. Cung góc nghiêng α từ đường ngang bên phải: arc((A), start: 0deg, stop: αdeg, radius: 1.0) — 0deg là nằm ngang sang phải, không dùng 90deg.',
   ].join('\n')
 }
 
