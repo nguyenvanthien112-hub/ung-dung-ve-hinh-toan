@@ -68,12 +68,12 @@ YÊU CẦU THIẾT KẾ (QUAN TRỌNG):
 - ⚠️ QUY TẮC VẼ CUNG GÓC (ARC) BẮT BUỘC — TRÁNH LỖI VẼ LỆCH VÀO TƯỜNG:
   • Trong CeTZ: 0deg = hướng NẰM NGANG SANG PHẢI; 90deg = hướng THẲNG ĐỨNG LÊN TRÊN.
   • "Góc ngẩng α so với PHƯƠNG NGANG" LÀ GÓC TỪ ĐƯỜNG NẰM NGANG BÊN PHẢI (0deg) ĐẾN TIA NGHƯƠNG (αdeg).
-  • BẮT BUỘC VẼ: `arc((tâm), start: 0deg, stop: αdeg, radius: 1.0, stroke: 1.5pt + rgb("#dc2626"))`
-  • 🚨 TUYỆT ĐỐI NGIÊM CẤM DÙNG `start: αdeg, stop: 90deg` HOẶC `stop: 90deg`!
-    (Nếu viết `start: 35deg, stop: 90deg`, cung góc sẽ bị vẽ đâm ngược lên tường nhà thẳng đứng 90°!).
+  • BẮT BUỘC VẼ: \`arc((tâm), start: 0deg, stop: αdeg, radius: 1.0, stroke: 1.5pt + rgb("#dc2626"))\`
+  • 🚨 TUYỆT ĐỐI NGIÊM CẤM DÙNG \`start: αdeg, stop: 90deg\` HOẶC \`stop: 90deg\`!
+    (Nếu viết \`start: 35deg, stop: 90deg\`, cung góc sẽ bị vẽ đâm ngược lên tường nhà thẳng đứng 90°!).
   • Ví dụ cụ thể:
-    - Tại A (góc 35°): `arc((A), start: 0deg, stop: 35deg, radius: 1.0, stroke: 1.5pt + rgb("#dc2626"))`
-    - Tại B (góc 15°): `arc((B), start: 0deg, stop: 15deg, radius: 1.2, stroke: 1.5pt + rgb("#dc2626"))`
+    - Tại A (góc 35°): \`arc((A), start: 0deg, stop: 35deg, radius: 1.0, stroke: 1.5pt + rgb("#dc2626"))\`
+    - Tại B (góc 15°): \`arc((B), start: 0deg, stop: 15deg, radius: 1.2, stroke: 1.5pt + rgb("#dc2626"))\`
   • Vị trí chữ ghi góc (ví dụ [$35^\circ$]): Đặt ở phía ngoài cung góc một chút, tại hướng khoảng α/2 (ví dụ góc 35° đặt tại 17.5°).
 
 - Nhãn điểm (A, B, C, D...): chữ to 14pt, in đậm (weight: "bold"), nằm ngoài vật thể rõ ràng.
